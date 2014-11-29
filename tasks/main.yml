@@ -1,0 +1,8 @@
+- name: get currently installed python version
+  shell: "{{ python_symlink }}/bin/python --version"
+  register: result
+  always_run: yes
+  ignore_errors: True
+
+- include: install_from_src.yml
+  when: result.get('stdout') != 'Python {{ python_version }}'

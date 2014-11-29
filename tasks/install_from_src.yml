@@ -1,0 +1,35 @@
+- name: "install dependence packages"
+  yum: name={{ item }} state=installed
+  with_items:
+    - gcc
+    - openssl-devel
+    - bzip2-devel
+    - libxslt-devel
+    - sqlite-devel
+
+- name: "wget python package"
+  get_url: url={{ python_src_url }} dest={{ src_dir }}
+
+- name: "expand python"
+  command: tar xzvf {{ src_dir }}/Python-{{ python_version }}.tgz chdir={{ src_dir }}
+
+- name: "install Python"
+  shell: >-
+    ./configure --prefix={{ python_prefix }} &&
+    make &&
+    make install chdir={{ src_dir }}/Python-{{ python_version }}
+
+- name: "create symlink"
+  file: src={{ python_prefix }} dest={{ python_symlink }} state=link
+
+- name: "add ldconfig"
+  shell: echo "{{ python_symlink }}/lib" > /etc/ld.so.conf.d/python.conf && ldconfig
+
+- name: "wget pip package"
+  get_url: url={{ python_get_pip_url }} dest={{ src_dir }}
+
+- name: "install pip"
+  shell: "{{python_prefix}}/bin/python {{src_dir}}/get-pip.py"
+
+- name: "install virtualenv"
+  shell: "{{python_prefix}}/bin/pip install virtualenv"
