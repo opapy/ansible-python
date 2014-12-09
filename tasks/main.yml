@@ -5,4 +5,4 @@
   ignore_errors: True
 
 - include: install_from_src.yml
-  when: result.get('stdout') != 'Python {{ python_version }}'
+  when: result.get('stderr') != 'Python {{ python_version }}'
