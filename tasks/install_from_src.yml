@@ -26,7 +26,7 @@
   shell: echo "{{ python_symlink }}/lib" > /etc/ld.so.conf.d/python.conf && ldconfig
 
 - name: "install pip"
-  shell: "curl -L {{ python_get_pip_url }} | {{python_prefix}}/bin/python"
+  shell: "{{python_prefix}}/bin/python -m ensurepip --upgrade"
 
 - name: "install virtualenv"
   shell: "{{python_prefix}}/bin/pip install virtualenv"
