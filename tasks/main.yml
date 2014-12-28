@@ -1,8 +1,17 @@
 - name: get currently installed python version
-  shell: "{{ python_symlink }}/bin/python --version"
+  shell: "{{ python_prefix }}/bin/python --version"
   register: result
   always_run: yes
   ignore_errors: True
 
 - include: install_from_src.yml
   when: result.get('stderr') != 'Python {{ python_version }}'
+
+- name: "add ldconfig"
+  shell: echo "{{ python_prefix }}/lib" > /etc/ld.so.conf.d/python-{{ python_version}}.conf && ldconfig
+
+- name: "install pip"
+  shell: "{{python_prefix}}/bin/python -m ensurepip --upgrade"
+
+- name: "install virtualenv"
+  shell: "{{python_prefix}}/bin/pip install virtualenv"
