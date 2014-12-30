@@ -8,13 +8,13 @@
     - sqlite-devel
 
 - name: "wget python package"
-  get_url: url={{ python_src_url }} dest=/tmp
+  get_url: url={{ python_src_url }} dest=/var/tmp
 
 - name: "expand python"
-  command: tar xzvf Python-{{ python_version }}.tgz chdir=/tmp
+  command: tar xzvf Python-{{ python_version }}.tgz chdir=/var/tmp
 
 - name: "install Python"
   shell: >-
     ./configure --prefix={{ python_prefix }} &&
     make &&
-    make install chdir=/tmp/Python-{{ python_version }}
+    make install chdir=/var/tmp/Python-{{ python_version }}
